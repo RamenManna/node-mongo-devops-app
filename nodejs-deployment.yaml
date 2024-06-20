@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+      - name: nodejs-app
+        image: ramendev2001/node-mongo-devops-app:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URI
+          # value: "mongodb://mongo-service:27017/mydatabase" # For direct Value
+          # valueFrom:  
+          #   secretKeyRef:
+          #     name: mongo-secret
+          #     key: mongo-uri
+          valueFrom:
+            configMapKeyRef:
+              name: mongo-configmap
+              key: mongo-uri
