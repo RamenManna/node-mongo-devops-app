@@ -7,7 +7,7 @@ pipeline {
   }
 
   stages {
-    stage('Verify The Jenkins Shell') {
+    stage('Verify The Jenkins Shell ') {
       steps {
         bat 'echo %SHELL%'
         bat 'where bash'
