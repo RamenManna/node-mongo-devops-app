@@ -12,6 +12,7 @@ pipeline {
         sh 'echo $SHELL'
         sh 'which bash'
       }
+    }
 
     stage('Code Checkout') {
       steps {
