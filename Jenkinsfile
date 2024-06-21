@@ -9,8 +9,8 @@ pipeline {
   stages {
     stage('Verify The Jenkins Shell') {
       steps {
-        sh 'echo $SHELL'
-        sh 'which bash'
+        bat 'echo %SHELL%'
+        bat 'where bash'
       }
     }
 
@@ -22,8 +22,8 @@ pipeline {
 
     stage('Build Test') {
       steps {
-        sh 'npm install'
-        sh 'npm test'
+        bat 'npm install'
+        bat 'npm test'
       }
     }
 
@@ -38,7 +38,7 @@ pipeline {
     stage('Push Docker Image') {
       steps {
         script {
-          docker.withRegistry('https://index.docker.io/v1/', "${DOCKERHUB_CREDENTIALS}") {
+          docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
             docker.image("ramendev2001/node-mongo-devops-app:${env.BUILD_ID}").push()
           }
         }
@@ -48,10 +48,10 @@ pipeline {
     stage('Deploy to Kubernetes') {
       steps {
         script {
-          withKubeConfig([credentialsId: "${KUBECONFIG_CREDENTIALS}", namespace: 'default', serverUrl: 'https://kubernetes.default.svc.cluster.local']) {
-            sh 'kubectl apply -f mongo-configmap.yaml -f mongo-pvc.yaml -f mongo-pv.yaml -f mongo-deployment.yaml -f mongo-service.yaml -f nodejs-deployment.yaml -f nodejs-service.yaml'
+          withKubeConfig([credentialsId: KUBECONFIG_CREDENTIALS, namespace: 'default', serverUrl: 'https://kubernetes.default.svc.cluster.local']) {
+            bat 'kubectl apply -f mongo-configmap.yaml -f mongo-pvc.yaml -f mongo-pv.yaml -f mongo-deployment.yaml -f mongo-service.yaml -f nodejs-deployment.yaml -f nodejs-service.yaml'
 
-            sh 'kubectl set image deployment/node-mongo-devops-app node-mongo-devops-app=ramendev2001/node-mongo-devops-app:${env.BUILD_ID}'
+            bat "kubectl set image deployment/node-mongo-devops-app node-mongo-devops-app=ramendev2001/node-mongo-devops-app:${env.BUILD_ID}"
           }
         }
       }
