@@ -42,13 +42,8 @@ pipeline {
       steps {
         script {
           withKubeConfig([credentialsId: "${KUBECONFIG_CREDENTIALS}", namespace: 'default', serverUrl: 'https://kubernetes.default.svc.cluster.local']) {
-            sh 'kubectl apply -f mongo-configmap.yaml'
-            sh 'kubectl apply -f mongo-pvc.yaml'
-            sh 'kubectl apply -f mongo-pv.yaml'
-            sh 'kubectl apply -f mongo-deployment.yaml'
-            sh 'kubectl apply -f mongo-service.yaml'
-            sh 'kubectl apply -f nodejs-deployment.yaml'
-            sh 'kubectl apply -f nodejs-service.yaml'
+            sh 'kubectl apply -f mongo-configmap.yaml -f mongo-pvc.yaml -f mongo-pv.yaml -f mongo-deployment.yaml -f mongo-service.yaml -f nodejs-deployment.yaml -f nodejs-service.yaml'
+
             sh 'kubectl set image deployment/node-mongo-devops-app node-mongo-devops-app=ramendev2001/node-mongo-devops-app:${env.BUILD_ID}'
           }
         }
