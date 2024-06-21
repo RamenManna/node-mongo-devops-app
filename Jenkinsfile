@@ -7,7 +7,13 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') {
+    stage('Verify The Jenkins Shell') {
+      steps {
+        sh 'echo $SHELL'
+        sh 'which bash'
+      }
+
+    stage('Code Checkout') {
       steps {
         git branch: 'master', url: 'https://github.com/RamenManna/node-mongo-devops-app.git'
       }
